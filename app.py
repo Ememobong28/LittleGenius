@@ -10,7 +10,12 @@ import os
 from firebase_admin import credentials, firestore
 
 
-CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST", "OPTIONS"])
+CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST", "OPTIONS"], supports_credentials=True)
+
+@app.before_request
+def handle_options_request():
+    if request.method == "OPTIONS":
+        return jsonify({"message": "OK"}), 200
 
 firebase_service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
 
