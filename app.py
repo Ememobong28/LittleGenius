@@ -8,7 +8,9 @@ import firebase_admin
 from flask_cors import CORS
 import os
 from firebase_admin import credentials, firestore
-CORS(app)
+
+
+CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST", "OPTIONS"])
 
 firebase_service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
 
