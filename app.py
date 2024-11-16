@@ -4,15 +4,23 @@ from openai import OpenAI
 app = Flask(__name__)
 import json
 
-import firebase_admin
 from firebase_admin import credentials, firestore
 
-# Path to your service account key file
-service_account_path = "/Users/ot/Desktop/WeSmart1.0/wesmart-bf8ac-firebase-adminsdk-xba5c-530f3e8763.json"
+import os
+import json
+from firebase_admin import credentials, initialize_app
+
+# Load the service account key from the environment variable
+service_account_key = os.getenv("FIREBASE_SERVICE_ACCOUNT")
+if not service_account_key:
+    raise ValueError("FIREBASE_SERVICE_ACCOUNT environment variable is not set.")
+
+# Parse the JSON string into a dictionary
+service_account_info = json.loads(service_account_key)
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate(service_account_path)
-firebase_admin.initialize_app(cred)
+cred = credentials.Certificate(service_account_info)
+initialize_app(cred)
 
 # Initialize Firestore
 db = firestore.client()
