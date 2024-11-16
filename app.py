@@ -4,23 +4,23 @@ from openai import OpenAI
 app = Flask(__name__)
 import json
 
+import firebase_admin
+from flask_cors import CORS
+import os
 from firebase_admin import credentials, firestore
 
-import os
-import json
-from firebase_admin import credentials, initialize_app
+CORS(app)
 
-# Load the service account key from the environment variable
-service_account_key = os.getenv("FIREBASE_SERVICE_ACCOUNT")
-if not service_account_key:
-    raise ValueError("FIREBASE_SERVICE_ACCOUNT environment variable is not set.")
+# Path to your service account key file
+firebase_creds_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
 
-# Parse the JSON string into a dictionary
-service_account_info = json.loads(service_account_key)
+if not firebase_creds_json:
+    raise ValueError("GOOGLE_APPLICATION_CREDENTIALS_JSON is not set in environment variables")
 
-# Initialize Firebase Admin SDK
-cred = credentials.Certificate(service_account_info)
-initialize_app(cred)
+# Parse the JSON string and initialize Firebase
+firebase_creds = json.loads(firebase_creds_json)
+cred = credentials.Certificate(firebase_creds)
+firebase_admin.initialize_app(cred)
 
 # Initialize Firestore
 db = firestore.client()
