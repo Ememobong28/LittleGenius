@@ -195,24 +195,36 @@ class HomePage extends StatelessWidget {
                         spacing: 16.0, // Horizontal space between cards
                         runSpacing: 16.0, // Vertical space between rows
                         children: [
-                          _buildFeatureCard(
-                            title: "Personalized Learning",
-                            description:
-                                "AI-driven tools tailored to your needs.",
-                            icon: Icons.school,
-                            color: Colors.purple,
+                          SizedBox(
+                            width: constraints.maxWidth / 2 -
+                                20, // Set width for proper wrapping
+                            child: _buildFeatureCard(
+                              title: "Personalized Learning",
+                              description:
+                                  "AI-driven tools tailored to your needs.",
+                              icon: Icons.school,
+                              color: Colors.purple,
+                            ),
                           ),
-                          _buildFeatureCard(
-                            title: "Expert Mentorship",
-                            description: "Guidance from trusted educators.",
-                            icon: Icons.people,
-                            color: Colors.blue,
+                          SizedBox(
+                            width: constraints.maxWidth / 2 -
+                                20, // Set width for proper wrapping
+                            child: _buildFeatureCard(
+                              title: "Expert Mentorship",
+                              description: "Guidance from trusted educators.",
+                              icon: Icons.people,
+                              color: Colors.blue,
+                            ),
                           ),
-                          _buildFeatureCard(
-                            title: "Track Progress",
-                            description: "Monitor academic growth over time.",
-                            icon: Icons.bar_chart,
-                            color: Colors.green,
+                          SizedBox(
+                            width: constraints.maxWidth / 2 -
+                                20, // Set width for proper wrapping
+                            child: _buildFeatureCard(
+                              title: "Track Progress",
+                              description: "Monitor academic growth over time.",
+                              icon: Icons.bar_chart,
+                              color: Colors.green,
+                            ),
                           ),
                         ],
                       );
