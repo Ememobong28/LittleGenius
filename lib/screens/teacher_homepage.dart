@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class TeacherHomePage extends StatefulWidget {
   const TeacherHomePage({super.key});
@@ -14,45 +16,63 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late String teacherId;
+  String teacherName = ""; // Variable to store teacher's name
   List<Map<String, dynamic>> students = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadStudents();
+    _loadTeacherDetailsAndStudents();
   }
 
-  Future<void> _loadStudents() async {
+  Future<void> _loadTeacherDetailsAndStudents() async {
     try {
       final currentUser = _auth.currentUser;
       if (currentUser == null) return;
 
       teacherId = currentUser.uid;
 
-      // Fetch the teacher's code from Firestore
+      // Fetch teacher details from Firestore
       DocumentSnapshot<Map<String, dynamic>> teacherSnapshot =
           await _firestore.collection('teachers').doc(teacherId).get();
 
       if (!teacherSnapshot.exists) throw Exception("Teacher not found.");
 
-      final teacherCode = teacherSnapshot.data()?['code'];
+      final data = teacherSnapshot.data();
+      final firstName = data?['firstName'] ?? "Unknown";
+      final lastName = data?['lastName'] ?? "Teacher";
+      teacherName = "$firstName $lastName";
+
+      final teacherCode = data?['code'];
       if (teacherCode == null) throw Exception("Teacher code not found.");
 
-      final studentSnapshot = await _firestore
-          .collection('students')
-          .where('teacherCode', isEqualTo: teacherCode)
-          .get();
+      // Fetch students from the server
+      final response = await http.get(
+        Uri.parse(
+            'https://wesmart-af8a83b2dfb0.herokuapp.com/students?teacherCode=$teacherCode'),
+      );
 
-      setState(() {
-        students = studentSnapshot.docs.map((doc) {
-          return {
-            'id': doc.id,
-            ...doc.data(),
-          };
-        }).toList();
-        isLoading = false;
-      });
+      if (response.statusCode == 200) {
+        final decodedResponse = json.decode(response.body);
+        final List<dynamic> studentData = decodedResponse['students'];
+
+        setState(() {
+          students = studentData.map((student) {
+            return (student as Map<String, dynamic>);
+          }).toList();
+
+          students.sort((a, b) {
+            final aCreatedAt = DateTime.parse(a['createdAt']);
+            final bCreatedAt = DateTime.parse(b['createdAt']);
+            return bCreatedAt.compareTo(aCreatedAt);
+          });
+
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load students: ${response.reasonPhrase}');
+      }
     } catch (e) {
       print("Error loading students: $e");
       setState(() {
@@ -61,42 +81,46 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
     }
   }
 
-  Future<void> _addFeedback(String studentId, String feedback) async {
-    await _firestore
-        .collection('students')
-        .doc(studentId)
-        .update({'feedback': feedback});
-  }
+  Future<void> _generateRecommendations(String studentId, String review) async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://wesmart-af8a83b2dfb0.herokuapp.com/generate-material'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'student_id': studentId,
+          'review': review,
+        }),
+      );
 
-  Future<void> _addCourse(String studentId, String course) async {
-    final studentRef = _firestore.collection('students').doc(studentId);
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(
+            "Recommendations saved successfully: ${responseData['recommendations']}");
 
-    final studentData = await studentRef.get();
-    List<String> courses = List.from(studentData.data()?['courses'] ?? []);
-    if (!courses.contains(course)) courses.add(course);
-
-    await studentRef.update({'courses': courses});
-  }
-
-  Future<void> _setGrade(String studentId, String grade) async {
-    await _firestore
-        .collection('students')
-        .doc(studentId)
-        .update({'grade': grade});
+        // Update the student list with recommendations
+        setState(() {
+          final student = students.firstWhere((s) => s['id'] == studentId);
+          student['recommendations'] = responseData['recommendations'];
+        });
+      } else {
+        throw Exception(
+            'Failed to generate recommendations: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print("Error generating recommendations: $e");
+    }
   }
 
   void _showStudentDetails(Map<String, dynamic> student) {
-    TextEditingController feedbackController =
-        TextEditingController(text: student['feedback'] ?? '');
-    TextEditingController courseController = TextEditingController();
-    TextEditingController gradeController =
-        TextEditingController(text: student['grade'] ?? '');
+    TextEditingController feedbackController = TextEditingController();
 
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      backgroundColor: const Color(0xFF1E1E2C), // Set background to match theme
       builder: (context) => Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -113,19 +137,24 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
             const SizedBox(height: 10),
             TextField(
               controller: feedbackController,
-              decoration: const InputDecoration(
-                labelText: "Feedback",
+              decoration: InputDecoration(
+                labelText: "Enter Feedback",
                 filled: true,
-                fillColor: Colors.white10,
-                border: OutlineInputBorder(),
+                fillColor: const Color(0xFF29293E), // Blackish background
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                labelStyle: const TextStyle(color: Colors.white70),
               ),
               maxLines: 3,
               style: const TextStyle(color: Colors.white),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {
-                _addFeedback(student['id'], feedbackController.text.trim());
+              onPressed: () async {
+                await _generateRecommendations(
+                    student['id'], feedbackController.text.trim());
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
@@ -134,57 +163,8 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text("Update Feedback"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: courseController,
-              decoration: const InputDecoration(
-                labelText: "Add Course",
-                filled: true,
-                fillColor: Colors.white10,
-                border: OutlineInputBorder(),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                _addCourse(student['id'], courseController.text.trim());
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4CAF50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text("Add Course"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: gradeController,
-              decoration: const InputDecoration(
-                labelText: "Grade",
-                filled: true,
-                fillColor: Colors.white10,
-                border: OutlineInputBorder(),
-              ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                _setGrade(student['id'], gradeController.text.trim());
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF7043),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text("Set Grade"),
+              child: const Text("Generate Recommendations",
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -208,6 +188,15 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              "Hi, $teacherName! Welcome to your dashboard!",
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
             const Text(
               "Little Rock Central High School",
               style: TextStyle(
@@ -260,7 +249,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                                   ),
                                 ),
                                 subtitle: Text(
-                                  "Grade: ${student['grade'] ?? 'Not Set'}\nCourses: ${student['courses']?.join(', ') ?? 'None'}",
+                                  "Grade: ${student['grade'] ?? 'Not Set'}\nCourses: ${student['courses']?.join(', ') ?? 'Grade 3 Math, Reading'}",
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.white70,
