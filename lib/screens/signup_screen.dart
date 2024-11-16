@@ -18,11 +18,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _codeController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  String? selectedGrade;
   bool isLoading = false;
 
   Future<void> teacherSignup() async {
@@ -30,14 +27,17 @@ class _SignupScreenState extends State<SignupScreen> {
       isLoading = true;
     });
     try {
+      // Create user account with email and password
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
+      // Generate unique teacher code
       final classCode = _generateCode();
 
+      // Save teacher data to Firestore
       await FirebaseFirestore.instance
           .collection('teachers')
           .doc(userCredential.user!.uid)
@@ -50,11 +50,18 @@ class _SignupScreenState extends State<SignupScreen> {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(role: 'Teacher'),
-        ),
+      // Display class code in a popup
+      _showSuccessDialog(
+        "Your Class Code",
+        "Here is your unique class code: $classCode",
+        onClose: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginScreen(role: 'Teacher'),
+            ),
+          );
+        },
       );
     } catch (e) {
       _showErrorDialog("Teacher Signup Failed", e.toString());
@@ -65,60 +72,26 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  Future<void> studentSignup() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      String userId = userCredential.user!.uid;
-
-      await FirebaseFirestore.instance.collection('students').doc(userId).set({
-        'student_id': userId,
-        'firstName': _firstNameController.text.trim(),
-        'lastName': _lastNameController.text.trim(),
-        'email': _emailController.text.trim(),
-        'role': 'Student',
-        'teacherCode': _codeController.text.trim(),
-        'grade': selectedGrade,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-
-      final teacherSnapshot = await FirebaseFirestore.instance
-          .collection('teachers')
-          .where('code', isEqualTo: _codeController.text.trim())
-          .get();
-
-      if (teacherSnapshot.docs.isEmpty) {
-        throw Exception('Invalid Teacher Code');
-      }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(role: 'Student'),
-        ),
-      );
-    } catch (e) {
-      _showErrorDialog("Student Signup Failed", e.toString());
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  String _generateCode({int length = 6}) {
-    final random = Random();
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
-        .join();
+  void _showSuccessDialog(String title, String message,
+      {VoidCallback? onClose}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              if (onClose != null) {
+                onClose();
+              }
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showErrorDialog(String title, String content) {
@@ -137,6 +110,13 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
+  String _generateCode({int length = 6}) {
+    final random = Random();
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+        .join();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +125,6 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Header Section
                 Container(
@@ -191,8 +170,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 40),
 
                 // Form Section
-                Container(
-                  width: 400, // Fixed width for text fields
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     children: [
                       _buildTextField(
@@ -215,71 +194,19 @@ class _SignupScreenState extends State<SignupScreen> {
                         label: "Password",
                         obscureText: true,
                       ),
-                      if (widget.role == 'Student') ...[
-                        const SizedBox(height: 15),
-                        _buildTextField(
-                          controller: _codeController,
-                          label: "Teacher's Code",
-                        ),
-                        const SizedBox(height: 15),
-                        DropdownButtonFormField<String>(
-                          value: selectedGrade,
-                          decoration: InputDecoration(
-                            labelText: "Select Grade",
-                            filled: true,
-                            fillColor: Colors.white12,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          items: [
-                            const DropdownMenuItem(
-                              value: 'Kindergarten',
-                              child: Text("Kindergarten"),
-                            ),
-                            for (var grade in [
-                              '1',
-                              '2',
-                              '3',
-                              '4',
-                              '5',
-                              '6',
-                              '7',
-                              '8',
-                              '9',
-                              '10',
-                              '11',
-                              '12'
-                            ])
-                              DropdownMenuItem(
-                                value: grade,
-                                child: Text("Grade $grade"),
-                              ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              selectedGrade = value;
-                            });
-                          },
-                        ),
-                      ],
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 30),
 
                 // Signup Button
                 isLoading
                     ? const CircularProgressIndicator()
                     : GestureDetector(
-                        onTap: () {
-                          widget.role == 'Student'
-                              ? studentSignup()
-                              : teacherSignup();
-                        },
+                        onTap: teacherSignup,
                         child: Container(
                           width: 200,
+                          margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
@@ -307,7 +234,6 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-
                 const SizedBox(height: 20),
 
                 // Footer Link
@@ -346,7 +272,6 @@ class _SignupScreenState extends State<SignupScreen> {
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white),
         filled: true,
         fillColor: Colors.white12,
         border: OutlineInputBorder(

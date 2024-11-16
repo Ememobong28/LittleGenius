@@ -16,9 +16,10 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late String teacherId;
-  String teacherName = ""; // Variable to store teacher's name
+  String teacherName = "";
   List<Map<String, dynamic>> students = [];
   bool isLoading = true;
+  String classCode = "";
 
   @override
   void initState() {
@@ -46,6 +47,12 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
 
       final teacherCode = data?['code'];
       if (teacherCode == null) throw Exception("Teacher code not found.");
+
+      // Store the teacher's class code
+      setState(() {
+        teacherName = "$firstName $lastName";
+        classCode = teacherCode;
+      });
 
       // Fetch students from the server
       final response = await http.get(
@@ -211,6 +218,31 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.white70,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Card(
+              color: const Color(0xFF29293E),
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                title: const Text(
+                  "Class Code",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+                subtitle: Text(
+                  classCode.isEmpty ? "Loading class code..." : classCode,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 20),
