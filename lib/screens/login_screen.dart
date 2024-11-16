@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginScreen extends StatefulWidget {
-  final String role; // Role: "Teacher" or "Student"
+  final String role; // Role: "Teacher", "Mentor", or "Student"
 
   const LoginScreen({super.key, required this.role});
 
@@ -30,8 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       // Determine collection based on role
-      String collectionName =
-          widget.role == 'Teacher' ? 'teachers' : 'students';
+      String collectionName = _getCollectionName(widget.role);
 
       // Fetch user details from Firestore
       DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
@@ -42,8 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (userDoc.exists && userDoc.data()!['role'] == widget.role) {
         // Navigate to the corresponding home page based on role
-        Navigator.pushReplacementNamed(context,
-            widget.role == 'Teacher' ? '/teacher-home' : '/student-home');
+        Navigator.pushReplacementNamed(
+          context,
+          _getHomeRoute(widget.role),
+        );
       } else {
         throw Exception("No ${widget.role} account found for this email.");
       }
@@ -55,6 +56,32 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  String _getCollectionName(String role) {
+    switch (role) {
+      case 'Teacher':
+        return 'teachers';
+      case 'Mentor':
+        return 'mentors';
+      case 'Student':
+        return 'students';
+      default:
+        throw Exception("Invalid role: $role");
+    }
+  }
+
+  String _getHomeRoute(String role) {
+    switch (role) {
+      case 'Teacher':
+        return '/teacher-home';
+      case 'Mentor':
+        return '/mentor-home';
+      case 'Student':
+        return '/student-home';
+      default:
+        throw Exception("Invalid role: $role");
     }
   }
 

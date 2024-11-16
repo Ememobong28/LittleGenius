@@ -18,8 +18,11 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _codeController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String? selectedGrade;
   bool isLoading = false;
 
   Future<void> teacherSignup() async {
@@ -27,17 +30,14 @@ class _SignupScreenState extends State<SignupScreen> {
       isLoading = true;
     });
     try {
-      // Create user account with email and password
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      // Generate unique teacher code
       final classCode = _generateCode();
 
-      // Save teacher data to Firestore
       await FirebaseFirestore.instance
           .collection('teachers')
           .doc(userCredential.user!.uid)
@@ -50,12 +50,11 @@ class _SignupScreenState extends State<SignupScreen> {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // Display class code in a popup
-      _showSuccessDialog(
+      _showPopup(
         "Your Class Code",
         "Here is your unique class code: $classCode",
         onClose: () {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => const LoginScreen(role: 'Teacher'),
@@ -72,8 +71,97 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  void _showSuccessDialog(String title, String message,
-      {VoidCallback? onClose}) {
+  Future<void> mentorSignup() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      await FirebaseFirestore.instance
+          .collection('mentors')
+          .doc(userCredential.user!.uid)
+          .set({
+        'firstName': _firstNameController.text.trim(),
+        'lastName': _lastNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'role': 'Mentor',
+        'mentees': [],
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      Navigator.pushReplacementNamed(context, '/mentor-home');
+    } catch (e) {
+      _showErrorDialog("Mentor Signup Failed", e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> studentSignup() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      String userId = userCredential.user!.uid;
+
+      await FirebaseFirestore.instance.collection('students').doc(userId).set({
+        'student_id': userId,
+        'firstName': _firstNameController.text.trim(),
+        'lastName': _lastNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'role': 'Student',
+        'teacherCode': _codeController.text.trim(),
+        'grade': selectedGrade,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      final teacherSnapshot = await FirebaseFirestore.instance
+          .collection('teachers')
+          .where('code', isEqualTo: _codeController.text.trim())
+          .get();
+
+      if (teacherSnapshot.docs.isEmpty) {
+        throw Exception('Invalid Teacher Code');
+      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(role: 'Student'),
+        ),
+      );
+    } catch (e) {
+      _showErrorDialog("Student Signup Failed", e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  String _generateCode({int length = 6}) {
+    final random = Random();
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+        .join();
+  }
+
+  void _showPopup(String title, String message, {VoidCallback? onClose}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -87,7 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 onClose();
               }
             },
-            child: const Text("OK"),
+            child: const Text("Close"),
           ),
         ],
       ),
@@ -110,17 +198,10 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  String _generateCode({int length = 6}) {
-    final random = Random();
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
-        .join();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E2C), // Dark purple background
+      backgroundColor: const Color(0xFF1E1E2C),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -194,16 +275,90 @@ class _SignupScreenState extends State<SignupScreen> {
                         label: "Password",
                         obscureText: true,
                       ),
+                      if (widget.role == 'Student') ...[
+                        const SizedBox(height: 15),
+                        _buildTextField(
+                          controller: _codeController,
+                          label: "Teacher's Code",
+                        ),
+                        const SizedBox(height: 15),
+                        Container(
+                          width: 450, // Set the width of the dropdown
+                          child: DropdownButtonFormField<String>(
+                            value: selectedGrade,
+                            decoration: InputDecoration(
+                              labelText: "Select Grade",
+                              labelStyle: const TextStyle(
+                                  color: Colors.white), // Label text style
+                              filled: true,
+                              fillColor: Colors.white12,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            dropdownColor: const Color(
+                                0xFF1E1E2C), // Dropdown background color
+                            items: [
+                              const DropdownMenuItem(
+                                value: 'Kindergarten',
+                                child: Text(
+                                  "Kindergarten",
+                                  style: TextStyle(
+                                      color:
+                                          Colors.white), // Dropdown text color
+                                ),
+                              ),
+                              for (var grade in [
+                                '1',
+                                '2',
+                                '3',
+                                '4',
+                                '5',
+                                '6',
+                                '7',
+                                '8',
+                                '9',
+                                '10',
+                                '11',
+                                '12'
+                              ])
+                                DropdownMenuItem(
+                                  value: grade,
+                                  child: Text(
+                                    "Grade $grade",
+                                    style: const TextStyle(
+                                        color: Colors
+                                            .white), // Dropdown text color
+                                  ),
+                                ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGrade = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 30),
 
                 // Signup Button
                 isLoading
                     ? const CircularProgressIndicator()
                     : GestureDetector(
-                        onTap: teacherSignup,
+                        onTap: () {
+                          if (widget.role == 'Teacher') {
+                            teacherSignup();
+                          } else if (widget.role == 'Mentor') {
+                            mentorSignup();
+                          } else if (widget.role == 'Student') {
+                            studentSignup();
+                          }
+                        },
                         child: Container(
                           width: 200,
                           margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -234,6 +389,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
+
                 const SizedBox(height: 20),
 
                 // Footer Link
@@ -267,22 +423,27 @@ class _SignupScreenState extends State<SignupScreen> {
     required String label,
     bool obscureText = false,
   }) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.white12,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF6A5AE0), width: 2),
+    return Container(
+      width: 450, // Adjust the width as needed
+      child: TextField(
+        controller: controller,
+        obscureText: obscureText,
+        style: const TextStyle(color: Colors.white), // Text input style
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.white), // Label text style
+          hintStyle: const TextStyle(color: Colors.white70), // Hint text style
+          filled: true,
+          fillColor: Colors.white12,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFF6A5AE0), width: 2),
+          ),
         ),
       ),
-      style: const TextStyle(color: Colors.white),
     );
   }
 }

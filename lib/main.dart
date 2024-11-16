@@ -6,6 +6,7 @@ import './screens/signup_screen.dart';
 import './screens/teacher_homepage.dart';
 import './screens/student_homepage.dart';
 import './screens/landing_page.dart';
+import './screens/mentor_homepage.dart';
 
 final firebaseConfig = FirebaseOptions(
   apiKey: "AIzaSyC-SI8yu2ZBW74iFGOZwW9lb82gS8Ij5ms",
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupScreen(role: 'Student'),
         '/teacher-home': (context) => const TeacherHomePage(),
         '/student-home': (context) => const StudentHomePage(),
+        '/mentor-home': (context) => const MentorHomePage(),
       },
     );
   }
