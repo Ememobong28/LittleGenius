@@ -195,9 +195,9 @@ class HomePage extends StatelessWidget {
                         spacing: 16.0, // Horizontal space between cards
                         runSpacing: 16.0, // Vertical space between rows
                         children: [
-                          SizedBox(
+                          Container(
                             width: constraints.maxWidth / 2 -
-                                20, // Set width for proper wrapping
+                                20, // Adjust width for wrapping
                             child: _buildFeatureCard(
                               title: "Personalized Learning",
                               description:
@@ -206,9 +206,8 @@ class HomePage extends StatelessWidget {
                               color: Colors.purple,
                             ),
                           ),
-                          SizedBox(
-                            width: constraints.maxWidth / 2 -
-                                20, // Set width for proper wrapping
+                          Container(
+                            width: constraints.maxWidth / 2 - 20,
                             child: _buildFeatureCard(
                               title: "Expert Mentorship",
                               description: "Guidance from trusted educators.",
@@ -216,9 +215,8 @@ class HomePage extends StatelessWidget {
                               color: Colors.blue,
                             ),
                           ),
-                          SizedBox(
-                            width: constraints.maxWidth / 2 -
-                                20, // Set width for proper wrapping
+                          Container(
+                            width: constraints.maxWidth / 2 - 20,
                             child: _buildFeatureCard(
                               title: "Track Progress",
                               description: "Monitor academic growth over time.",
@@ -245,41 +243,39 @@ class HomePage extends StatelessWidget {
     required IconData icon,
     required Color color,
   }) {
-    return Flexible(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: color.withOpacity(0.1),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: color.withOpacity(0.2),
-              child: Icon(icon, size: 30, color: color),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: color.withOpacity(0.1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: color.withOpacity(0.2),
+            child: Icon(icon, size: 30, color: color),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            description,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white70,
             ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
