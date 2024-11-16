@@ -1,4 +1,6 @@
 # WeSmart
+
+
 ​
 ## Challenge Statement(s) Addressed 
 How can we dismantle the school-to-prison pipeline by addressing inequitable education systems and improving literacy levels in Arkansas through AI-driven solutions?
@@ -27,6 +29,7 @@ Benefits:
 * Long-term goal of reducing the pipeline to incarceration by improving literacy and addressing socio-emotional needs.
 ​
 ## Tech Overview 
+* Website Deployed Link: https://superb-alfajores-2729f4.netlify.app 
 **... what tech was used to bring this project to life?**
 ​
 ​
@@ -34,7 +37,9 @@ Benefits:
 **...point us to the short clip that tells us about your solution **
 ​
 ### Link to Demo Presentation 
-**...point us to your PPT or Canva slides **
+https://www.canva.com/design/DAGWme2KBKs/cNWdM29sZbwLmzfWSzY4Tw/edit
+
+
 ​
 ### Team Checklist ✅
 - [x] Team photo
@@ -44,9 +49,9 @@ Benefits:
 - [x] Hangar registration
 ​
 ### Project Checklist 
-- [ ] Presentation complete and linked
+- [x] Presentation complete and linked
 - [ ] Video pitch recorded and linked
-- [ ] Code merged to main branch
+- [x] Code merged to main branch
 ​
 ### School Name 
 Philander Smith University
