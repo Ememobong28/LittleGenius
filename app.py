@@ -8,17 +8,19 @@ import firebase_admin
 from flask_cors import CORS
 import os
 from firebase_admin import credentials, firestore
-
 CORS(app)
 
-# Path to your service account key file
-firebase_creds_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
+firebase_service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
 
-if not firebase_creds_json:
-    raise ValueError("GOOGLE_APPLICATION_CREDENTIALS_JSON is not set in environment variables")
+if not firebase_service_account_json:
+    print("Environment variable FIREBASE_SERVICE_ACCOUNT is missing or empty.")
+    raise ValueError("FIREBASE_SERVICE_ACCOUNT environment variable is not set")
+else:
+    print(f"Environment variable FIREBASE_SERVICE_ACCOUNT is loaded. First 100 characters: {firebase_service_account_json[:100]}")
+
 
 # Parse the JSON string and initialize Firebase
-firebase_creds = json.loads(firebase_creds_json)
+firebase_creds = json.loads(firebase_service_account_json)
 cred = credentials.Certificate(firebase_creds)
 firebase_admin.initialize_app(cred)
 
