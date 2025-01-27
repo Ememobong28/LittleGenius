@@ -238,7 +238,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        "Get started with WeSmart today!",
+                        "Get started with LittleGenius today!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -282,7 +282,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           label: "Teacher's Code",
                         ),
                         const SizedBox(height: 15),
-                        Container(
+                        SizedBox(
                           width: 450, // Set the width of the dropdown
                           child: DropdownButtonFormField<String>(
                             value: selectedGrade,
@@ -423,7 +423,7 @@ class _SignupScreenState extends State<SignupScreen> {
     required String label,
     bool obscureText = false,
   }) {
-    return Container(
+    return SizedBox(
       width: 450, // Adjust the width as needed
       child: TextField(
         controller: controller,

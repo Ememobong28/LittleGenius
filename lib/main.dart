@@ -7,8 +7,9 @@ import './screens/teacher_homepage.dart';
 import './screens/student_homepage.dart';
 import './screens/landing_page.dart';
 import './screens/mentor_homepage.dart';
+import 'dart:html' as html;
 
-final firebaseConfig = FirebaseOptions(
+final firebaseConfig = const FirebaseOptions(
   apiKey: "AIzaSyC-SI8yu2ZBW74iFGOZwW9lb82gS8Ij5ms",
   authDomain: "wesmart-bf8ac.firebaseapp.com",
   projectId: "wesmart-bf8ac",
@@ -25,17 +26,18 @@ Future<void> main() async {
   } else {
     await Firebase.initializeApp();
   }
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WeSmart',
+      title: 'LittleGenius',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Roboto'),
+      navigatorObservers: [MyRouteObserver()],
       initialRoute: '/',
       routes: {
         '/': (context) => const HomePage(),
@@ -46,5 +48,44 @@ class MyApp extends StatelessWidget {
         '/mentor-home': (context) => const MentorHomePage(),
       },
     );
+  }
+}
+
+class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    super.didPush(route, previousRoute);
+    _updateTitle(route.settings.name);
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    super.didPop(route, previousRoute);
+    _updateTitle(previousRoute?.settings.name);
+  }
+
+  void _updateTitle(String? routeName) {
+    String newTitle = 'LittleGenius'; // Default title
+    switch (routeName) {
+      case '/':
+        newTitle = 'LittleGenius - Home';
+        break;
+      case '/onboarding':
+        newTitle = 'LittleGenius - Onboarding';
+        break;
+      case '/signup':
+        newTitle = 'LittleGenius - Sign Up';
+        break;
+      case '/teacher-home':
+        newTitle = 'LittleGenius - Teacher Dashboard';
+        break;
+      case '/student-home':
+        newTitle = 'LittleGenius - Student Dashboard';
+        break;
+      case '/mentor-home':
+        newTitle = 'LittleGenius - Mentor Dashboard';
+        break;
+    }
+    html.document.title = newTitle;
   }
 }

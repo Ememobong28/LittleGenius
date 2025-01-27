@@ -1,4 +1,4 @@
-# WeSmart
+# LittleGenuis
 
 
 ​
@@ -20,7 +20,7 @@ How It Works:
 ​
 ## Project Value 
 Target Audience:
-* Primary: K-12 students, teachers, and mentors in Arkansas.
+* Primary: K-8 students, teachers, and mentors in Arkansas.
 * Secondary: School administrators and policymakers.
 
 Benefits:
@@ -29,35 +29,10 @@ Benefits:
 * Long-term goal of reducing the pipeline to incarceration by improving literacy and addressing socio-emotional needs.
 ​
 ## Tech Overview 
-* Website Deployed Link: https://superb-alfajores-2729f4.netlify.app 
-**... what tech was used to bring this project to life?**
-​
-​
-### Link to Video Pitch 
-**...point us to the short clip that tells us about your solution **
-​
-### Link to Demo Presentation 
-https://www.canva.com/design/DAGWme2KBKs/cNWdM29sZbwLmzfWSzY4Tw/edit
-
-
-​
-### Team Checklist ✅
-- [x] Team photo
-- [x] Team Slack channel
-- [x] Communication established with mentor
-- [x] Repo creation from this template
-- [x] Hangar registration
-​
-### Project Checklist 
-- [x] Presentation complete and linked
-- [ ] Video pitch recorded and linked
-- [x] Code merged to main branch
+* Website Deployed Link: 
 ​
 ### School Name 
 Philander Smith University
-​
-### Team Name 
-PSU Panthers
 ​
 ### ✨ Contributors ✨
 * Immanuella Umoren

@@ -155,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 40),
 
                 // Form Section
-                Container(
+                SizedBox(
                   width: 350, // Fixed width for text fields
                   child: Column(
                     children: [

@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       const Text(
-                                        "Unlock Your Potential with WeSmart",
+                                        "Unlock Your Potential with LittleGenius",
                                         style: TextStyle(
                                           fontSize: 28,
                                           fontWeight: FontWeight.bold,
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 16),
                                       const Text(
-                                        "An AI-driven platform empowering K-12 students in Arkansas with personalized learning, mentorship, and progress tracking.",
+                                        "An AI-driven platform empowering K-8 students in Arkansas with personalized learning, mentorship, and progress tracking.",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.white70,
@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
-                                      "Unlock Your Potential with WeSmart",
+                                      "Unlock Your Potential with LittleGenius",
                                       style: TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class HomePage extends StatelessWidget {
 
                 // Why Choose Us Section
                 const Text(
-                  "Why Choose WeSmart?",
+                  "Why Choose LittleGenius?",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -195,7 +195,7 @@ class HomePage extends StatelessWidget {
                         spacing: 16.0, // Horizontal space between cards
                         runSpacing: 16.0, // Vertical space between rows
                         children: [
-                          Container(
+                          SizedBox(
                             width: constraints.maxWidth / 2 -
                                 20, // Adjust width for wrapping
                             child: _buildFeatureCard(
@@ -206,7 +206,7 @@ class HomePage extends StatelessWidget {
                               color: Colors.purple,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: constraints.maxWidth / 2 - 20,
                             child: _buildFeatureCard(
                               title: "Expert Mentorship",
@@ -215,7 +215,7 @@ class HomePage extends StatelessWidget {
                               color: Colors.blue,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: constraints.maxWidth / 2 - 20,
                             child: _buildFeatureCard(
                               title: "Track Progress",
@@ -261,7 +261,7 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,

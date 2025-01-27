@@ -46,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      "Welcome to WeSmart!",
+                      "Welcome to LittleGenius!",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 36,
@@ -120,7 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     )
-                                  : LinearGradient(
+                                  : const LinearGradient(
                                       colors: [Colors.white12, Colors.white10],
                                     ),
                               boxShadow: isSelected

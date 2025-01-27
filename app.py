@@ -72,13 +72,6 @@ def get_students_by_teacher_code():
 
 
 
-
-
-
-
-
-client = OpenAI(api_key = "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")
-
 @app.route('/generate-material', methods=['POST'])
 def generate_material():
     """Generate and store a single recommendation for the student."""

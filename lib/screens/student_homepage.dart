@@ -90,7 +90,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
       ));
     } catch (e) {
       print("Error marking as studied: $e");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Failed to mark as studied. Try again later.'),
         backgroundColor: Colors.red,
       ));
@@ -101,7 +101,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Could not open the link.'),
         backgroundColor: Colors.red,
       ));
@@ -145,11 +145,11 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 30,
                               backgroundImage:
-                                  const AssetImage('assets/avater.png'),
-                              backgroundColor: const Color(0xFF6A5AE0),
+                                  AssetImage('assets/avater.png'),
+                              backgroundColor: Color(0xFF6A5AE0),
                             ),
                             const SizedBox(width: 10),
                             Column(
