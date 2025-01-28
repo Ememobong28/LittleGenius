@@ -1,4 +1,4 @@
-# Little Genuis
+# Little Genius
 
 
 ​

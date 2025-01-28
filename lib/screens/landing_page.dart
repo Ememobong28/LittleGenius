@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       const Text(
-                                        "Unlock Your Potential with LittleGenius",
+                                        "Unlock Your Potential with Little Genius",
                                         style: TextStyle(
                                           fontSize: 28,
                                           fontWeight: FontWeight.bold,
@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
-                                      "Unlock Your Potential with LittleGenius",
+                                      "Unlock Your Potential with Little Genius",
                                       style: TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class HomePage extends StatelessWidget {
 
                 // Why Choose Us Section
                 const Text(
-                  "Why Choose LittleGenius?",
+                  "Why Choose Little Genius?",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,

@@ -65,25 +65,25 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   }
 
   void _updateTitle(String? routeName) {
-    String newTitle = 'LittleGenius'; // Default title
+    String newTitle = 'Little Genius'; // Default title
     switch (routeName) {
       case '/':
-        newTitle = 'LittleGenius - Home';
+        newTitle = 'Little Genius - Home';
         break;
       case '/onboarding':
-        newTitle = 'LittleGenius - Onboarding';
+        newTitle = 'Little Genius - Onboarding';
         break;
       case '/signup':
-        newTitle = 'LittleGenius - Sign Up';
+        newTitle = 'Little Genius - Sign Up';
         break;
       case '/teacher-home':
-        newTitle = 'LittleGenius - Teacher Dashboard';
+        newTitle = 'Little Genius - Teacher Dashboard';
         break;
       case '/student-home':
-        newTitle = 'LittleGenius - Student Dashboard';
+        newTitle = 'Little Genius - Student Dashboard';
         break;
       case '/mentor-home':
-        newTitle = 'LittleGenius - Mentor Dashboard';
+        newTitle = 'Little Genius - Mentor Dashboard';
         break;
     }
     html.document.title = newTitle;

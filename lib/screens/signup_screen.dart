@@ -238,7 +238,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        "Get started with LittleGenius today!",
+                        "Get started with Little Genius today!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -308,20 +308,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                           Colors.white), // Dropdown text color
                                 ),
                               ),
-                              for (var grade in [
-                                '1',
-                                '2',
-                                '3',
-                                '4',
-                                '5',
-                                '6',
-                                '7',
-                                '8',
-                                '9',
-                                '10',
-                                '11',
-                                '12'
-                              ])
+                              for (var grade in ['1', '2', '3', '4', '5', '6'])
                                 DropdownMenuItem(
                                   value: grade,
                                   child: Text(

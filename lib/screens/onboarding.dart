@@ -46,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      "Welcome to LittleGenius!",
+                      "Welcome to Little Genius!",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 36,
@@ -56,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      "Empowering K-12 students with AI-driven personalized learning.",
+                      "Empowering K-6 students with AI-driven personalized learning.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,

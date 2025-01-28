@@ -147,8 +147,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                           children: [
                             const CircleAvatar(
                               radius: 30,
-                              backgroundImage:
-                                  AssetImage('assets/avater.png'),
+                              backgroundImage: AssetImage('assets/avater.png'),
                               backgroundColor: Color(0xFF6A5AE0),
                             ),
                             const SizedBox(width: 10),
