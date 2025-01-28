@@ -1,7 +1,6 @@
-# LittleGenuis
-<img src="https://github.com/user-attachments/assets/4ae19290-46a5-4c78-b99d-926f51e76ecb" alt="IMG_6327" width="350" height="700">
-<img src="https://github.com/user-attachments/assets/93135c99-7b2e-4a7a-af5f-2389337a1fb5" alt="IMG_6328" width="350" height="700">
-<img src="https://github.com/user-attachments/assets/e286d00d-752a-4d7d-ad7f-bd9c9fc09633" alt="IMG_6329" width="350" height="700">
+# Little Genuis
+
+
 ​
 
 ## Challenge Statement(s) Addressed 
@@ -16,13 +15,13 @@ LittleGenius is an AI-driven personalized learning platform aimed at mitigating 
 
 How It Works:
 * Leverages OpenAI API and educational APIs for adaptive learning.
-* Provides gamified and personalized resources to engage K-8 students.
+* Provides gamified and personalized resources to engage K-6 students.
 * Features a future mentorship system and social-emotional learning (SEL) modules for holistic student development.
 
 ​
 ## Project Value 
 Target Audience:
-* Primary: K-8 students, teachers, and mentors in Arkansas.
+* Primary: K-6 students, teachers, and mentors in Arkansas.
 * Secondary: School administrators and policymakers.
 
 Benefits:
@@ -40,5 +39,4 @@ Philander Smith University
 * Immanuella Umoren
 * Otito Udedibor
 * Kenna Agbugba
-* Kayode James-Owolabi
-* Wilton Cartwright
+* Adeoluwa James-Owolabi
