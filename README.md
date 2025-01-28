@@ -13,6 +13,11 @@
 <img width="800" alt="Screenshot 2025-01-27 at 7 06 27 PM" src="https://github.com/user-attachments/assets/7bf616c5-7a4f-47fc-ab05-e844d36bc68f" />
 
 
+
+<img width="800" alt="Screenshot 2025-01-27 at 7 13 43 PM" src="https://github.com/user-attachments/assets/3408fbf3-8b72-46ac-8352-fb39f7bb6547" />
+
+
+
 ## Challenge Statement(s) Addressed 
 How can we dismantle the school-to-prison pipeline by addressing inequitable education systems and improving literacy levels in Arkansas through AI-driven solutions?
 
