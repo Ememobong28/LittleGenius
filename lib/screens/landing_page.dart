@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 16),
                                       const Text(
-                                        "An AI-driven platform empowering K-8 students in Arkansas with personalized learning, mentorship, and progress tracking.",
+                                        "An AI-driven platform empowering K-6 students in Arkansas with personalized learning, mentorship, and progress tracking.",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.white70,
