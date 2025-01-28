@@ -1,7 +1,17 @@
 # Little Genius
 
 
-​
+
+<img width="800" alt="Screenshot 2025-01-27 at 7 06 09 PM" src="https://github.com/user-attachments/assets/063f7add-34cb-44c7-80aa-5bb894962db0" />
+
+
+
+<img width="800" alt="Screenshot 2025-01-27 at 7 11 35 PM" src="https://github.com/user-attachments/assets/0b8f2d4e-bf85-4895-aee2-37f33e12e5c6" />
+
+
+
+<img width="800" alt="Screenshot 2025-01-27 at 7 06 27 PM" src="https://github.com/user-attachments/assets/7bf616c5-7a4f-47fc-ab05-e844d36bc68f" />
+
 
 ## Challenge Statement(s) Addressed 
 How can we dismantle the school-to-prison pipeline by addressing inequitable education systems and improving literacy levels in Arkansas through AI-driven solutions?
