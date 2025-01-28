@@ -11,7 +11,7 @@ How can we dismantle the school-to-prison pipeline by addressing inequitable edu
 * Using AI-driven solutions to promote equitable access and enhance learning outcomes.*
 
 ## Project Description 
-LittleGenius is an AI-driven personalized learning platform aimed at mitigating educational disparities in Arkansas, starting with the Little Rock School District.
+Little Genius is an AI-driven personalized learning platform aimed at mitigating educational disparities in Arkansas, starting with the Little Rock School District.
 
 How It Works:
 * Leverages OpenAI API and educational APIs for adaptive learning.
@@ -30,7 +30,7 @@ Benefits:
 * Long-term goal of reducing the pipeline to incarceration by improving literacy and addressing socio-emotional needs.
 ​
 ## Tech Overview 
-* Website Deployed Link: https://6797ad2750d9df0095117d1f--superb-alfajores-2729f4.netlify.app
+* Website Deployed Link: https://67982ce7000efae6015897a2--superb-alfajores-2729f4.netlify.app/
 ​
 ### School Name 
 Philander Smith University
